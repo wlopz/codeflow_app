@@ -1,5 +1,5 @@
 const Home = () => (
-  <h1 className="text-3xl font-black text-teal-700">
+  <h1 className="h1-bold background-light850_dark100">
     Welcome Wilooo!
   </h1>
 )
