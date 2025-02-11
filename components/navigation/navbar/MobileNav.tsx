@@ -56,8 +56,6 @@ const MobileNav = () => {
                 </Button>
               </Link>
             </SheetClose>
-
-            
           </div>
         </div>
       </SheetContent>
