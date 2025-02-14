@@ -4,6 +4,7 @@ import ROUTES from '@/constants/routes'
 import LocalSearch from '@/components/search/LocalSearch'
 import HomeFilter from '@/components/filters/HomeFilter';
 import QuestionCard from '@/components/cards/QuestionCard';
+// import handleError from '@/lib/handlers/error';
 
 const questions = [
   {
@@ -36,11 +37,22 @@ const questions = [
   },
 ];
 
+// const test = async () => {
+//   try {
+//     throw new Error('Test Error')
+//   } catch (error) {
+//     return handleError(error)
+//   }
+    
+// }
+
 interface SearchParams {
   searchParams: Promise<{[key: string]: string}>;
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
+  // const result = await test()
+  // console.log(result)
   const { query = "", filter = "" } = await searchParams
 
   const filteredQuestions = questions.filter((question) => {
