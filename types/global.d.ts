@@ -20,3 +20,28 @@ interface Question {
   views: number;
   createdAt: Date;
 }
+
+type ActionResponse<T = null> = {
+  success: boolean;
+  data?: T;
+  error?: {
+    message: string;
+    details?: Record<string, string[]>
+  },
+  status?: number
+}
+
+type SuccessResponse<T = null> = ActionResponse<T> & {
+  success: true
+}
+
+type ErrorResponse = ActionResponse<undefined> & {
+  success: false
+}
+
+// eslint-disable-next-line no-undef
+type APIErrorResponse = NextResponse<ErrorResponse>
+
+// eslint-disable-next-line no-undef
+type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>
+
