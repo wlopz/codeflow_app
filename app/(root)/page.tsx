@@ -4,7 +4,8 @@ import ROUTES from '@/constants/routes'
 import LocalSearch from '@/components/search/LocalSearch'
 import HomeFilter from '@/components/filters/HomeFilter';
 import QuestionCard from '@/components/cards/QuestionCard';
-// import handleError from '@/lib/handlers/error';
+import { api } from '@/lib/api';
+import handleError from '@/lib/handlers/error';
 // import dbConnect from '@/lib/mongoose';
 
 const questions = [
@@ -38,14 +39,14 @@ const questions = [
   },
 ];
 
-// const test = async () => {
-//   try {
-//     throw new Error('Test Error')
-//   } catch (error) {
-//     return handleError(error)
-//   }
+const test = async () => {
+  try {
+    return await api.users.getAll()
+  } catch (error) {
+    return handleError(error)
+  }
     
-// }
+}
 
 // const test = async () => {
 //   try {
@@ -61,7 +62,9 @@ interface SearchParams {
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-  // await test()
+  const users = await test()
+
+  console.log(users)
 
   const { query = "", filter = "" } = await searchParams
 
