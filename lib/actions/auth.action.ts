@@ -10,7 +10,8 @@ import User from "@/database/user.model";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { SignUpSchema } from "../validations";
+import { SignUpSchema, SignInSchema } from "../validations";
+import { NotFoundError } from "../http-errors";
 
 export async function signUpWithCredentials(
   params: AuthCredentials
@@ -29,11 +30,11 @@ export async function signUpWithCredentials(
   try {
     const existingUser = await User.findOne({ email }).session(session)
 
-    if (existingUser) throw new Error("User already exists")
+    if (existingUser) throw new Error("User")
 
     const existingUsername = await User.findOne({ username }).session(session)
 
-    if (existingUsername) throw new Error("Username already exists")
+    if (existingUsername) throw new Error("Username")
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
@@ -66,5 +67,37 @@ export async function signUpWithCredentials(
     return handleError(error) as ErrorResponse
   } finally {
     await session.endSession()
+  }
+}
+
+export async function signInWithCredentials(
+  params: Pick<AuthCredentials, "email" | "password">
+): Promise<ActionResponse> {
+  const validationResult = await action({ params, schema: SignInSchema })
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse
+  }
+
+  const { email, password } = validationResult.params!
+
+  try {
+    const existingUser = await User.findOne({ email })
+
+    if (!existingUser) throw new NotFoundError("User")
+
+    const existingAccount = await Account.findOne({ provider: "credentials", providerAccountId: email })
+
+    if (!existingAccount) throw new NotFoundError("User")
+
+    const passwordMatch = await bcrypt.compare(password, existingAccount.password)
+
+    if (!passwordMatch) throw new Error("Password don't match")
+
+    await signIn('credentials', { email, password, redirect: false })
+
+    return {success: true,}
+  } catch (error) {
+    return handleError(error) as ErrorResponse
   }
 }
