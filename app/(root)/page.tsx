@@ -4,7 +4,7 @@ import ROUTES from '@/constants/routes'
 import LocalSearch from '@/components/search/LocalSearch'
 import HomeFilter from '@/components/filters/HomeFilter';
 import QuestionCard from '@/components/cards/QuestionCard';
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
 // import { api } from '@/lib/api';
 // import handleError from '@/lib/handlers/error';
 // import dbConnect from '@/lib/mongoose';
