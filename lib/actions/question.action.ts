@@ -112,10 +112,14 @@ export async function editQuestion(
     }
 
     const tagsToAdd = tags.filter(
-      (tag) => !question.tags.some((t: ITagDoc) => t.name.toLowerCase().includes(tag.toLowerCase()))
+      (tag) =>
+        !question.tags.some((t: ITagDoc) =>
+          t.name.toLowerCase().includes(tag.toLowerCase())
+        )
     );
     const tagsToRemove = question.tags.filter(
-      (tag: ITagDoc) => !tags.some((t) => t.toLowerCase() === tag.name.toLowerCase())
+      (tag: ITagDoc) =>
+        !tags.some((t) => t.toLowerCase() === tag.name.toLowerCase())
     );
 
     const newTagDocuments = [];
@@ -154,7 +158,10 @@ export async function editQuestion(
       );
 
       question.tags = question.tags.filter(
-        (tag: mongoose.Types.ObjectId) => !tagIdsToRemove.some((id: mongoose.Types.ObjectId) => id.equals(tag._id))
+        (tag: mongoose.Types.ObjectId) =>
+          !tagIdsToRemove.some((id: mongoose.Types.ObjectId) =>
+            id.equals(tag._id)
+          )
       );
     }
 
@@ -191,7 +198,9 @@ export async function getQuestion(
   const { questionId } = validationResult.params!;
 
   try {
-    const question = await Question.findById(questionId).populate("tags");
+    const question = await Question.findById(questionId)
+    .populate("tags")
+    .populate("author", "_id name image");
 
     if (!question) throw new Error("Question not found");
 
@@ -207,62 +216,66 @@ export async function getQuestions(
   const validationResult = await action({
     params,
     schema: PaginatedSearchParamsSchema,
-  })
+  });
 
   if (validationResult instanceof Error) {
-    return handleError(validationResult) as ErrorResponse
+    return handleError(validationResult) as ErrorResponse;
   }
 
-  const { page = 1, pageSize = 10, query, filter } = params
-  const skip = (Number(page) - 1) * pageSize
-  const limit = Number(pageSize)
+  const { page = 1, pageSize = 10, query, filter } = params;
+  const skip = (Number(page) - 1) * pageSize;
+  const limit = Number(pageSize);
 
-  const filterQuery: FilterQuery<typeof Question> = {}
+  const filterQuery: FilterQuery<typeof Question> = {};
 
-  if (filter === 'recommended') return { success: true, data: { questions: [], isNext: false } }
+  if (filter === "recommended")
+    return { success: true, data: { questions: [], isNext: false } };
 
   if (query) {
-    filterQuery. $or = [
-      { title: { $regex: new RegExp(query, 'i') } },
-      { content: { $regex: new RegExp(query, 'i') } },
-    ]
+    filterQuery.$or = [
+      { title: { $regex: new RegExp(query, "i") } },
+      { content: { $regex: new RegExp(query, "i") } },
+    ];
   }
 
-  let sortCriteria = {}
+  let sortCriteria = {};
 
   switch (filter) {
-    case 'newest':
-      sortCriteria = { createdAt: -1 }
-      break
-    case 'unanswered':
-      filterQuery.answers = 0
-      sortCriteria = { createdAt: -1 }
-      break
-    case 'popular':
-      sortCriteria = { upvotes: -1 }
-      break
+    case "newest":
+      sortCriteria = { createdAt: -1 };
+      break;
+    case "unanswered":
+      filterQuery.answers = 0;
+      sortCriteria = { createdAt: -1 };
+      break;
+    case "popular":
+      sortCriteria = { upvotes: -1 };
+      break;
     default:
-      sortCriteria = { createdAt: -1 }
-      break
+      sortCriteria = { createdAt: -1 };
+      break;
   }
 
   try {
     // throw new Error('error')
 
-    const totalQuestions = await Question.countDocuments(filterQuery)
+    const totalQuestions = await Question.countDocuments(filterQuery);
 
     const questions = await Question.find(filterQuery)
-      .populate('tags', 'name')
+      .populate("tags", "name")
       // .populate('author', 'name image')
       .lean()
       .sort(sortCriteria)
       .skip(skip)
-      .limit(limit)
+      .limit(limit);
 
-    const isNext = totalQuestions > skip + questions.length
+    const isNext = totalQuestions > skip + questions.length;
 
-    return { success: true, data: { questions: JSON.parse(JSON.stringify(questions)), isNext } }
+    return {
+      success: true,
+      data: { questions: JSON.parse(JSON.stringify(questions)), isNext },
+    };
   } catch (error) {
-    return handleError(error) as ErrorResponse
+    return handleError(error) as ErrorResponse;
   }
 }
