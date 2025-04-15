@@ -4,12 +4,11 @@ import Preview from '@/components/editor/Preview';
 import Metric from '@/components/Metric';
 import UserAvatar from '@/components/UserAvatar'
 import ROUTES from '@/constants/routes';
-import { getQuestion } from '@/lib/actions/question.action';
+import { getQuestion, incrementViews } from '@/lib/actions/question.action';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react'
-import View from '../view';
 
 // const sampleQuestion = {
 //   id: "q123",
@@ -81,7 +80,19 @@ import View from '../view';
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params
-  const { success, data: question } = await getQuestion({ questionId: id})
+  
+  // Parallel requests to increment views and get question details
+  // Using Promise.all to run both requests concurrently
+  // and destructuring the results
+  // to get the success status and question data
+  // This is more efficient than waiting for each request to finish one by one
+  // and allows for better performance
+  // and faster response times
+  // Also, using async/await syntax for better readability
+  const [_, { success, data: question }] = await Promise.all([
+    await incrementViews({ questionId: id }),
+    await getQuestion({ questionId: id})
+  ])
 
   if (!success || !question) return redirect("/404")
 
@@ -89,7 +100,6 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 
   return (
     <>
-      <View questionId={id} />
       <div className='flex-start w-full flex-col'>
         <div className='flex w-full flex-col-reverse justify-between'>
           <div className='flex items-center justify-start gap-1'>
