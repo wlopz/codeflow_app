@@ -33,3 +33,7 @@ interface GetQuestionParams {
 interface GetTagQuestionsParams extends Omit<GetQuestionParams, 'filter'> {
   tagId: string
 }
+
+interface IncrementViewsParams {
+  questionId: string
+} 
