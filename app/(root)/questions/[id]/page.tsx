@@ -9,6 +9,7 @@ import { formatNumber, getTimeStamp } from '@/lib/utils';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react'
+import { after } from 'next/server';
 
 // const sampleQuestion = {
 //   id: "q123",
@@ -80,19 +81,11 @@ import React from 'react'
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params
+  const { success, data: question } = await getQuestion({ questionId: id})
   
-  // Parallel requests to increment views and get question details
-  // Using Promise.all to run both requests concurrently
-  // and destructuring the results
-  // to get the success status and question data
-  // This is more efficient than waiting for each request to finish one by one
-  // and allows for better performance
-  // and faster response times
-  // Also, using async/await syntax for better readability
-  const [_, { success, data: question }] = await Promise.all([
-    await incrementViews({ questionId: id }),
-    await getQuestion({ questionId: id})
-  ])
+  after(async () => {
+    await incrementViews({ questionId: id })
+  })
 
   if (!success || !question) return redirect("/404")
 
