@@ -39,6 +39,11 @@ export const EMPTY_TAGS = {
   },
 };
 
+export const EMPTY_ANSWERS = {
+  title: "No Answers Found",
+  message: "The answer board is empry. Make it rain with your answer.",
+};
+
 export const EMPTY_COLLECTIONS = {
   title: "Collections Are Empty",
   message:
