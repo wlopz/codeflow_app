@@ -102,11 +102,13 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
             render={({ field }) => (
               <FormItem className="flex w-full flex-col gap-3">
                 <FormControl className="mt-3.5">
-                  <Editor
-                    value={field.value}
-                    editorRef={editorRef}
-                    fieldChange={field.onChange}
-                  />
+                  <div>
+                    <Editor
+                      value={field.value}
+                      editorRef={editorRef}
+                      fieldChange={field.onChange}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
