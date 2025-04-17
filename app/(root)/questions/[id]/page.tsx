@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { after } from 'next/server';
+import AnswerForm from '@/components/form/AnswerForm';
 
 // const sampleQuestion = {
 //   id: "q123",
@@ -156,6 +157,10 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           />
         ))}
       </div>
+
+      <section className='my-5'>
+        <AnswerForm />
+      </section>
     </>
   )
 }
