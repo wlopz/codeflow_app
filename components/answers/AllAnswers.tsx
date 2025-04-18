@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { EMPTY_ANSWERS } from "@/constants/states";
 import DataRenderer from "../DataRenderer";
 import AnswerCard from "../cards/AnswerCard";

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 interface SignInWithOAuthParams {
   provider: 'github' | 'google'
   providerAccountId: string

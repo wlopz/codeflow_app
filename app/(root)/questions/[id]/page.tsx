@@ -102,7 +102,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
     pageSize: 10 
   });
 
-  console.log("ANSWERS", answersResult)
+  // console.log("ANSWERS", answersResult)
 
   const { author, createdAt, answers, views, tags, content, title } = question;
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import ROUTES from "@/constants/routes";
 import UserAvatar from "../UserAvatar";
 import Link from "next/link";
