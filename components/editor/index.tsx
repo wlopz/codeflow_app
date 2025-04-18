@@ -79,6 +79,7 @@ const Editor = ({ editorRef, value, fieldChange, ...props }: Props) => {
             "": "unspecified",
             tsx: "TypeScript (React)",
             jsx: "JavaScript (React)",
+            py: "python",
           },
           autoLoadLanguageSupport: true,
           codeMirrorExtensions: theme,

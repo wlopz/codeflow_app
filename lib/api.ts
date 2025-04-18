@@ -13,7 +13,6 @@ export const api = {
       user,
       provider,
       providerAccountId,
-      // eslint-disable-next-line no-undef
     }: SignInWithOAuthParams) =>
       fetchHandler(`${API_BASE_URL}/auth/${ROUTES.SIGN_IN_WITH_OAUTH}`, {
         method: "POST",
@@ -68,7 +67,7 @@ export const api = {
   },
   ai: {
     getAnswer: (question: string, content: string): APIResponse<string> =>
-      fetchHandler(`${API_BASE_URL}/ai/answer`, {
+      fetchHandler(`${API_BASE_URL}/ai/answers`, {
         method: "POST",
         body: JSON.stringify({ question, content }),
       })
