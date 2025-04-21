@@ -128,6 +128,10 @@ export async function createVote(
         );
         // Increment the vote count for the new type
         await updateVoteCount(
+          { targetId, targetType, voteType: existingVote.voteType, change: -1 },
+          session
+        );
+        await updateVoteCount(
           { targetId, targetType, voteType, change: 1 },
           session
         );
