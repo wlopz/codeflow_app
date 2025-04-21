@@ -16,6 +16,8 @@ import {
   HasVotedSchema,
   UpdateVoteCountSchema,
 } from "../validations";
+import { revalidatePath } from "next/cache";
+import ROUTES from "@/constants/routes";
 
 /**
  * Updates the vote count for a question or answer.
@@ -154,6 +156,8 @@ export async function createVote(
     await session.commitTransaction();
     session.endSession();
 
+    revalidatePath(ROUTES.QUESTION(targetId))
+
     // Return success response
     return { success: true };
   } catch (error) {
@@ -189,14 +193,14 @@ export async function hasVoted(
     });
 
     if (!vote) {
-      return { success: false, data: { hasUpVoted: false, hasDownVoted: false } };
+      return { success: false, data: { hasUpvoted: false, hasDownvoted: false } };
     }
 
     return {
       success: true,
       data: {
-        hasUpVoted: vote.voteType === "upvote",
-        hasDownVoted: vote.voteType === "downvote",
+        hasUpvoted: vote.voteType === "upvote",
+        hasDownvoted: vote.voteType === "downvote",
       },
     };
   } catch (error) {
