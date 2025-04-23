@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 "use server";
 
 import { Collection, Question } from "@/database";
 import { CollectionBaseSchema } from "../validations";
 import handleError from "../handlers/error";
 import { revalidatePath } from "next/cache";
-import { ROUTE } from "@/constants/routes";
+import ROUTE from "@/constants/routes";
 import action from "../handlers/action";
 
 export async function toggleSaveQuestion(
