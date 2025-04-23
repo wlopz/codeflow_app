@@ -1,14 +1,25 @@
+/* eslint-disable no-undef */
 "use client";
 
 import { toast } from "@/hooks/use-toast";
 import { toggleSaveQuestion } from "@/lib/actions/collection.action";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 
-const SaveQuestion = ({ questionId }: { questionId: string }) => {
+const SaveQuestion = ({
+  questionId,
+  hasSavedQuestionPromise,
+}: {
+  questionId: string;
+  hasSavedQuestionPromise: Promise<ActionResponse<{ saved: boolean }>>;
+}) => {
   const session = useSession();
   const userId = session?.data?.user?.id;
+
+  const { data } = use(hasSavedQuestionPromise)
+
+  const { saved: hasSaved } = data || {}
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,8 +52,6 @@ const SaveQuestion = ({ questionId }: { questionId: string }) => {
       setIsLoading(false);
     }
   };
-
-  const hasSaved = false; // TODO: Check if the question is already saved
 
   return (
     <Image
