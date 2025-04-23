@@ -1,5 +1,4 @@
 
-import { title } from "process";
 import ROUTES from "./routes";
 
 export const DEFAULT_EMPTY = {
