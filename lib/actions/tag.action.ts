@@ -1,9 +1,13 @@
-/* eslint-disable no-undef */
 import { FilterQuery } from "mongoose";
-import handleError from "../handlers/error";
-import { GetTagQuestionsSchema, PaginatedSearchParamsSchema } from "../validations";
-import action from "../handlers/action";
+
 import { Question, Tag } from "@/database";
+
+import action from "../handlers/action";
+import handleError from "../handlers/error";
+import {
+  GetTagQuestionsSchema,
+  PaginatedSearchParamsSchema,
+} from "../validations";
 
 export const getTags = async (
   params: PaginatedSearchParams
@@ -71,7 +75,9 @@ export const getTags = async (
 
 export const getTagQuestions = async (
   params: GetTagQuestionsParams
-): Promise<ActionResponse<{ tag: Tag; questions: Question[]; isNext: boolean }>> => {
+): Promise<
+  ActionResponse<{ tag: Tag; questions: Question[]; isNext: boolean }>
+> => {
   const validationResult = await action({
     params,
     schema: GetTagQuestionsSchema,
@@ -84,7 +90,7 @@ export const getTagQuestions = async (
   const { tagId, page = 1, pageSize = 10, query } = params;
   const skip = (Number(page) - 1) * pageSize;
   const limit = Number(pageSize);
-  
+
   try {
     const tag = await Tag.findById(tagId);
 
@@ -93,17 +99,17 @@ export const getTagQuestions = async (
     const filterQuery: FilterQuery<typeof Question> = {
       tags: { $in: [tagId] },
     };
-  
+
     if (query) {
       filterQuery.title = [{ $regex: query, $options: "i" }];
     }
     const totalQuestions = await Question.countDocuments(filterQuery);
 
     const questions = await Question.find(filterQuery)
-      .select('_id title views answers upvotes downvotes author createdAt')
+      .select("_id title views answers upvotes downvotes author createdAt")
       .populate([
-        { path: 'author', select: 'name image'},
-        { path: 'tags', select: 'name'},
+        { path: "author", select: "name image" },
+        { path: "tags", select: "name" },
       ])
       .skip(skip)
       .limit(limit);

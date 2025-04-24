@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 "use server";
 
 import mongoose, { FilterQuery } from "mongoose";

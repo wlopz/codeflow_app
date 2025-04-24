@@ -1,4 +1,3 @@
-
 import ROUTES from "./routes";
 
 export const DEFAULT_EMPTY = {
@@ -57,4 +56,4 @@ export const EMPTY_COLLECTIONS = {
 export const EMPTY_USERS = {
   title: "No Users Found",
   message: "You're the first one here! But don't worry, more will join soon.",
-}
+};

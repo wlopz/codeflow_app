@@ -3,9 +3,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import React, { useRef, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import ROUTES from "@/constants/routes";
+import { toast } from "@/hooks/use-toast";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { AskQuestionSchema } from "@/lib/validations";
+
+import TagCard from "../cards/TagCard";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -16,14 +26,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import dynamic from "next/dynamic";
-import { z } from "zod";
-import TagCard from "../cards/TagCard";
-import { createQuestion, editQuestion } from "@/lib/actions/question.action";
-import { useRouter } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
-import ROUTES from "@/constants/routes";
 
 const Editor = dynamic(() => import("@/components/editor"), {
   // Make sure we turn SSR off
@@ -31,9 +33,8 @@ const Editor = dynamic(() => import("@/components/editor"), {
 });
 
 interface Params {
-  // eslint-disable-next-line no-undef
-  question?: Question,
-  isEdit?: boolean
+  question?: Question;
+  isEdit?: boolean;
 }
 
 const QuestionForm = ({ question, isEdit = false }: Params) => {
@@ -97,15 +98,15 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
       if (isEdit && question) {
         const result = await editQuestion({
           questionId: question?._id,
-          ...data
-        })
+          ...data,
+        });
 
         if (result.success) {
           toast({
             title: "Success",
             description: "Question updated successfully",
           });
-  
+
           if (result.data) router.push(ROUTES.QUESTION(result.data._id));
         } else {
           toast({
@@ -115,7 +116,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
           });
         }
 
-        return
+        return;
       }
       const result = await createQuestion(data);
 
@@ -239,10 +240,8 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
                 <ReloadIcon className="mr-2 size-4 animate-spin" />
                 <span>Submitting</span>
               </>
-            ): (
-              <>
-                {isEdit ? "Edit" : "Ask a Question"}
-              </>
+            ) : (
+              <>{isEdit ? "Edit" : "Ask a Question"}</>
             )}
           </Button>
         </div>

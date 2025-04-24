@@ -1,9 +1,9 @@
-import LocalSearch from "@/components/search/LocalSearch";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
+import LocalSearch from "@/components/search/LocalSearch";
+import ROUTES from "@/constants/routes";
 import { EMPTY_COLLECTIONS } from "@/constants/states";
 import { getSavedQuestions } from "@/lib/actions/collection.action";
-import ROUTES from "@/constants/routes";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -22,7 +22,7 @@ const Collection = async ({ searchParams }: SearchParams) => {
   const { collection } = data || {};
 
   return (
-    <> 
+    <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
@@ -32,7 +32,7 @@ const Collection = async ({ searchParams }: SearchParams) => {
           otherClasses="flex-1"
         />
       </div>
-      
+
       <DataRenderer
         success={success}
         data={collection}

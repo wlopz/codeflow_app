@@ -1,7 +1,7 @@
-/* eslint-disable no-undef */
 import { EMPTY_ANSWERS } from "@/constants/states";
-import DataRenderer from "../DataRenderer";
+
 import AnswerCard from "../cards/AnswerCard";
+import DataRenderer from "../DataRenderer";
 
 interface Props extends ActionResponse<Answer[]> {
   totalAnswers: number;
@@ -17,12 +17,14 @@ const AllAnswers = ({ data, success, error, totalAnswers }: Props) => {
         <p>Filters</p>
       </div>
 
-      <DataRenderer 
+      <DataRenderer
         data={data}
         error={error}
         success={success}
         empty={EMPTY_ANSWERS}
-        render={(answers) => answers.map((answer) => <AnswerCard key={answer._id} {...answer} />)}
+        render={(answers) =>
+          answers.map((answer) => <AnswerCard key={answer._id} {...answer} />)
+        }
       />
     </div>
   );

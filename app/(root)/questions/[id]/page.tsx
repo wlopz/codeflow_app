@@ -1,22 +1,22 @@
-/* eslint-disable no-undef */
-import TagCard from "@/components/cards/TagCard";
-import Preview from "@/components/editor/Preview";
-import Metric from "@/components/Metric";
-import UserAvatar from "@/components/UserAvatar";
-import ROUTES from "@/constants/routes";
-import { getQuestion, incrementViews } from "@/lib/actions/question.action";
-import { formatNumber, getTimeStamp } from "@/lib/utils";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React, { Suspense } from "react";
 import { after } from "next/server";
-import AnswerForm from "@/components/form/AnswerForm";
-import { getAnswers } from "@/lib/actions/answer.action";
+import React, { Suspense } from "react";
+
 import AllAnswers from "@/components/answers/AllAnswers";
-import Votes from "@/components/votes/Votes";
-import { hasVoted } from "@/lib/actions/vote.actions";
+import TagCard from "@/components/cards/TagCard";
+import Preview from "@/components/editor/Preview";
+import AnswerForm from "@/components/form/AnswerForm";
+import Metric from "@/components/Metric";
 import SaveQuestion from "@/components/questions/SaveQuestion";
+import UserAvatar from "@/components/UserAvatar";
+import Votes from "@/components/votes/Votes";
+import ROUTES from "@/constants/routes";
+import { getAnswers } from "@/lib/actions/answer.action";
 import { hasSavedQuestion } from "@/lib/actions/collection.action";
+import { getQuestion, incrementViews } from "@/lib/actions/question.action";
+import { hasVoted } from "@/lib/actions/vote.actions";
+import { formatNumber, getTimeStamp } from "@/lib/utils";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -46,7 +46,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 
   const hasSavedQuestionPromise = hasSavedQuestion({
     questionId: question._id,
-  })
+  });
 
   // console.log("ANSWERS", answersResult)
 
@@ -82,7 +82,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
             </Suspense>
 
             <Suspense fallback={<div>Loading...</div>}>
-              <SaveQuestion 
+              <SaveQuestion
                 questionId={question._id}
                 hasSavedQuestionPromise={hasSavedQuestionPromise}
               />

@@ -1,6 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MDXEditorMethods } from "@mdxeditor/editor";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,18 +18,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-
-import { AnswerSchema } from "@/lib/validations";
-import { useRef, useState, useTransition } from "react";
-import dynamic from "next/dynamic";
-import { MDXEditorMethods } from "@mdxeditor/editor";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import Image from "next/image";
-import { createAnswer } from "@/lib/actions/answer.action";
 import { toast } from "@/hooks/use-toast";
-import { useSession } from "next-auth/react";
-// import { set } from "mongoose";
+import { createAnswer } from "@/lib/actions/answer.action";
 import { api } from "@/lib/api";
+import { AnswerSchema } from "@/lib/validations";
+// import { set } from "mongoose";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -98,14 +97,14 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
           title: "Error",
           description: error?.message,
           variant: "destructive",
-        })
+        });
       }
 
-      const formattedAnswer = data.replace(/<br>/g, " ").toString().trim()
+      const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
 
       if (editorRef.current) {
         editorRef.current.setMarkdown(formattedAnswer);
-        
+
         form.setValue("content", formattedAnswer);
         form.trigger("content");
       }
@@ -114,7 +113,6 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
         title: "Success",
         description: "AI answer generated successfully.",
       });
-
     } catch (error) {
       toast({
         title: "Error",

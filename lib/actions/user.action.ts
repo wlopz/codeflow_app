@@ -1,11 +1,12 @@
-/* eslint-disable no-undef */
 "use server";
 
+import { FilterQuery } from "mongoose";
+
 import { User } from "@/database";
+
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { PaginatedSearchParamsSchema } from "../validations";
-import { FilterQuery } from "mongoose";
 
 export async function getUsers(
   params: PaginatedSearchParams

@@ -1,14 +1,15 @@
-/* eslint-disable no-undef */
 "use server";
 
+import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
+
+import ROUTES from "@/constants/routes";
+import { Question } from "@/database";
 import Answer, { IAnswerDoc } from "@/database/answer.model";
 import action from "@/lib/handlers/action";
-import { AnswerServerSchema, GetAnswersSchema } from "../validations";
-import mongoose from "mongoose";
+
 import handleError from "../handlers/error";
-import { Question } from "@/database";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
+import { AnswerServerSchema, GetAnswersSchema } from "../validations";
 
 export async function createAnswer(
   params: CreateAnswerParams
@@ -76,54 +77,53 @@ export async function getAnswers(params: GetAnswersParams): Promise<
   const validationResult = await action({
     params,
     schema: GetAnswersSchema,
-  })
+  });
 
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
 
-  const { questionId, page = 1, pageSize = 10, filter } = params
+  const { questionId, page = 1, pageSize = 10, filter } = params;
 
-  const skip = (Number(page) - 1) * pageSize
+  const skip = (Number(page) - 1) * pageSize;
 
-  let sortCriteria = {}
+  let sortCriteria = {};
 
   switch (filter) {
-    case 'latest':
-      sortCriteria = { createdAt: -1 }
-      break
-    case 'oldest':
-      sortCriteria = { createdAt: 1 }
-      break
-    case 'popular':
-      sortCriteria = { upvotes: -1 }
-      break
+    case "latest":
+      sortCriteria = { createdAt: -1 };
+      break;
+    case "oldest":
+      sortCriteria = { createdAt: 1 };
+      break;
+    case "popular":
+      sortCriteria = { upvotes: -1 };
+      break;
     default:
-      sortCriteria = { createdAt: -1 }
-      break
+      sortCriteria = { createdAt: -1 };
+      break;
   }
 
   try {
-    const totalAnswers = await Answer.countDocuments({ question: questionId })
+    const totalAnswers = await Answer.countDocuments({ question: questionId });
 
     const answers = await Answer.find({ question: questionId })
       .populate("author", "_id name image")
       .sort(sortCriteria)
       .skip(skip)
-      .limit(Number(pageSize))
-    
-    const isNext = totalAnswers > skip + answers.length
+      .limit(Number(pageSize));
+
+    const isNext = totalAnswers > skip + answers.length;
 
     return {
       success: true,
       data: {
         answers: JSON.parse(JSON.stringify(answers)),
         isNext,
-        totalAnswers
-      }
-    }
-
+        totalAnswers,
+      },
+    };
   } catch (error) {
-    return handleError(error) as ErrorResponse
+    return handleError(error) as ErrorResponse;
   }
 }

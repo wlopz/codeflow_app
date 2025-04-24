@@ -124,6 +124,6 @@ const Editor = ({ editorRef, value, fieldChange, ...props }: Props) => {
       {...props}
     />
   );
-}
+};
 
-export default Editor
+export default Editor;

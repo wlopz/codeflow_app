@@ -1,10 +1,11 @@
-/* eslint-disable no-undef */
 "use server";
 
 // Import mongoose for database interactions and ClientSession for transactions
 import mongoose, { ClientSession } from "mongoose";
-
 // Import the Answer, Question, and Vote models from the database
+import { revalidatePath } from "next/cache";
+
+import ROUTES from "@/constants/routes";
 import { Answer, Question, Vote } from "@/database";
 
 // Import helper functions: action validates and processes requests; handleError formats errors
@@ -16,8 +17,6 @@ import {
   HasVotedSchema,
   UpdateVoteCountSchema,
 } from "../validations";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
 
 /**
  * Updates the vote count for a question or answer.
@@ -160,7 +159,7 @@ export async function createVote(
     await session.commitTransaction();
     session.endSession();
 
-    revalidatePath(ROUTES.QUESTION(targetId))
+    revalidatePath(ROUTES.QUESTION(targetId));
 
     // Return success response
     return { success: true };
@@ -197,7 +196,10 @@ export async function hasVoted(
     });
 
     if (!vote) {
-      return { success: false, data: { hasUpvoted: false, hasDownvoted: false } };
+      return {
+        success: false,
+        data: { hasUpvoted: false, hasDownvoted: false },
+      };
     }
 
     return {

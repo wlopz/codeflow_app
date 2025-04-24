@@ -185,17 +185,17 @@ export const CreateVoteSchema = z.object({
   targetId: z.string().min(1, { message: "Target ID is required." }),
   targetType: z.enum(["question", "answer"]),
   voteType: z.enum(["upvote", "downvote"]),
-})
+});
 
 export const UpdateVoteCountSchema = CreateVoteSchema.extend({
   change: z.number().int().min(-1).max(1),
-})
+});
 
 export const HasVotedSchema = CreateVoteSchema.pick({
   targetType: true,
-  targetId: true
-})
+  targetId: true,
+});
 
 export const CollectionBaseSchema = z.object({
   questionId: z.string().min(1, { message: "Question ID is required." }),
-})
+});

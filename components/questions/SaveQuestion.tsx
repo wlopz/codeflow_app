@@ -1,11 +1,11 @@
-/* eslint-disable no-undef */
 "use client";
+
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import React, { use, useState } from "react";
 
 import { toast } from "@/hooks/use-toast";
 import { toggleSaveQuestion } from "@/lib/actions/collection.action";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import React, { use, useState } from "react";
 
 const SaveQuestion = ({
   questionId,
@@ -17,9 +17,9 @@ const SaveQuestion = ({
   const session = useSession();
   const userId = session?.data?.user?.id;
 
-  const { data } = use(hasSavedQuestionPromise)
+  const { data } = use(hasSavedQuestionPromise);
 
-  const { saved: hasSaved } = data || {}
+  const { saved: hasSaved } = data || {};
 
   const [isLoading, setIsLoading] = useState(false);
 

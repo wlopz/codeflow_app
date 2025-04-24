@@ -22,7 +22,8 @@ const spaceGrotesk = localFont({
 
 export const metadata: Metadata = {
   title: "CodeFlow",
-  description: "Your go-to developer Q&A platform for instant coding help. Ask programming questions, share expert advice, and collaborate on solutions. Explore topics in web dev, mobile apps, AI, and more.",
+  description:
+    "Your go-to developer Q&A platform for instant coding help. Ask programming questions, share expert advice, and collaborate on solutions. Explore topics in web dev, mobile apps, AI, and more.",
   icons: {
     icon: "/images/site-logo.svg",
   },
@@ -34,17 +35,21 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+        />
       </head>
       <SessionProvider session={session}>
         <body
           className={`${inter.className} ${spaceGrotesk.variable} antialiased`}
         >
-          <ThemeProvider 
-          attribute="class" 
-          defaultTheme="system" 
-          enableSystem 
-          disableTransitionOnChange
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
             {children}
           </ThemeProvider>
@@ -53,6 +58,6 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
       </SessionProvider>
     </html>
   );
-}
+};
 
-export default RootLayout
+export default RootLayout;

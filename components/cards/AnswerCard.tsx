@@ -1,12 +1,13 @@
-/* eslint-disable no-undef */
-import ROUTES from "@/constants/routes";
-import UserAvatar from "../UserAvatar";
 import Link from "next/link";
-import { getTimeStamp } from "@/lib/utils";
-import Preview from "../editor/Preview";
 import { Suspense } from "react";
-import Votes from "../votes/Votes";
+
+import ROUTES from "@/constants/routes";
 import { hasVoted } from "@/lib/actions/vote.actions";
+import { getTimeStamp } from "@/lib/utils";
+
+import Preview from "../editor/Preview";
+import UserAvatar from "../UserAvatar";
+import Votes from "../votes/Votes";
 
 const AnswerCard = ({
   _id,

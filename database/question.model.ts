@@ -23,7 +23,7 @@ const QuestionSchema = new Schema<IQuestion>(
     downvotes: { type: Number, default: 0 },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Question =

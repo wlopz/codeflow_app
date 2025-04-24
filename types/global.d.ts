@@ -28,61 +28,59 @@ type ActionResponse<T = null> = {
   data?: T;
   error?: {
     message: string;
-    details?: Record<string, string[]>
-  },
-  status?: number
-}
+    details?: Record<string, string[]>;
+  };
+  status?: number;
+};
 
 type SuccessResponse<T = null> = ActionResponse<T> & {
-  success: true
-}
+  success: true;
+};
 
 type ErrorResponse = ActionResponse<undefined> & {
-  success: false
-}
+  success: false;
+};
 
-// eslint-disable-next-line no-undef
-type APIErrorResponse = NextResponse<ErrorResponse>
+type APIErrorResponse = NextResponse<ErrorResponse>;
 
-// eslint-disable-next-line no-undef
-type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>
+type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
 
 interface RouteParams {
-  params: Promise<Record<string, string>>
-  searchParams: Promise<Record<string, string>>
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
 }
 
 interface PaginatedSearchParams {
-  page?: number
-  pageSize?: number
-  query?: string
-  filter?: string
-  sort?: string
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  filter?: string;
+  sort?: string;
 }
 
 interface Answer {
-  _id: string
-  author: Author
-  content: string
-  createdAt: Date
-  upvotes: number
-  downvotes: number
+  _id: string;
+  author: Author;
+  content: string;
+  createdAt: Date;
+  upvotes: number;
+  downvotes: number;
 }
 
 interface User {
-  _id: string
-  name: string
-  username: string
-  email: string
-  image?: string
-  bio?: string
-  location?: string
-  portfolio?: string
-  reputation?: number
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  image?: string;
+  bio?: string;
+  location?: string;
+  portfolio?: string;
+  reputation?: number;
 }
 
 interface Collection {
-  _id: string
-  author: string | Author
-  question: Question
+  _id: string;
+  author: string | Author;
+  question: Question;
 }

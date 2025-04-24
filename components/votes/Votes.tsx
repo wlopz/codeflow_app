@@ -1,12 +1,12 @@
-/* eslint-disable no-undef */
 "use client";
 
-import { use, useState } from "react";
 import Image from "next/image";
-import { formatNumber } from "@/lib/utils";
 import { useSession } from "next-auth/react";
+import { use, useState } from "react";
+
 import { toast } from "@/hooks/use-toast";
 import { createVote } from "@/lib/actions/vote.actions";
+import { formatNumber } from "@/lib/utils";
 
 interface Params {
   targetType: "question" | "answer";

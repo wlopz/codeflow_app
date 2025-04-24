@@ -1,16 +1,17 @@
-/* eslint-disable no-undef */
 "use server";
 
 import mongoose, { PipelineStage } from "mongoose";
+import { revalidatePath } from "next/cache";
+
+import ROUTES from "@/constants/routes";
 import { Collection, Question } from "@/database";
+
+import action from "../handlers/action";
+import handleError from "../handlers/error";
 import {
   CollectionBaseSchema,
   PaginatedSearchParamsSchema,
 } from "../validations";
-import handleError from "../handlers/error";
-import { revalidatePath } from "next/cache";
-import action from "../handlers/action";
-import ROUTES from "@/constants/routes";
 
 export async function toggleSaveQuestion(
   params: CollectionBaseParams
@@ -175,7 +176,7 @@ export async function getSavedQuestions(
       { $count: "count" },
     ]);
 
-    const totalCount = totalCountResult?.count ?? 0
+    const totalCount = totalCountResult?.count ?? 0;
 
     pipeline.push({ $sort: sortCriteria }, { $skip: skip }, { $limit: limit });
     pipeline.push({ $project: { question: 1, author: 1 } });

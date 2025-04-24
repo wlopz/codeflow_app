@@ -1,9 +1,10 @@
-import React from "react";
-import UserAvatar from "../UserAvatar";
 import Link from "next/link";
+import React from "react";
+
 import ROUTES from "@/constants/routes";
 
-// eslint-disable-next-line no-undef
+import UserAvatar from "../UserAvatar";
+
 const UserCard = ({ _id, name, image, username }: User) => (
   <div className="shadow-light100_darknone w-full xs:w-[230px]">
     <article className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8">

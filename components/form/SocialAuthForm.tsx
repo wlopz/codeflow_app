@@ -10,49 +10,48 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 
 const SocialAuthForm = () => {
-  const buttonClass = 'background-dark400_light900 body-medium text-dark200_light800 min-h-12 flex-1 rounded-2 px-4 py-3.5'
-  const handleSignIn = async (provider: 'github' | 'google') => {
+  const buttonClass =
+    "background-dark400_light900 body-medium text-dark200_light800 min-h-12 flex-1 rounded-2 px-4 py-3.5";
+  const handleSignIn = async (provider: "github" | "google") => {
     try {
-      await signIn(provider, { 
+      await signIn(provider, {
         callbackUrl: ROUTES.HOME,
-        redirect: false 
-      })
+        redirect: false,
+      });
     } catch (error) {
-      console.error(error)
+      console.error(error);
       toast({
-        title: 'Error',
-        description: 
-          error instanceof Error 
-          ? error.message 
-          : 'An error occurred',
-        variant: 'destructive'
-      })
+        title: "Error",
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
     }
-  }
+  };
   return (
-    <div className='mt-10 flex flex-wrap gap-2.5'>
-      <Button className={buttonClass} onClick={() => handleSignIn('github')}>
+    <div className="mt-10 flex flex-wrap gap-2.5">
+      <Button className={buttonClass} onClick={() => handleSignIn("github")}>
         <Image
-          src='/icons/github.svg'
-          alt='Github Logo'
+          src="/icons/github.svg"
+          alt="Github Logo"
           width={20}
           height={20}
-          className='invert-colors mr-2.5 object-contain'
+          className="invert-colors mr-2.5 object-contain"
         />
         <span>Log in with Github</span>
       </Button>
-      <Button className={buttonClass} onClick={() => handleSignIn('google')}>
+      <Button className={buttonClass} onClick={() => handleSignIn("google")}>
         <Image
-          src='/icons/google.svg'
-          alt='Google Logo'
+          src="/icons/google.svg"
+          alt="Google Logo"
           width={20}
           height={20}
-          className='mr-2.5 object-contain'
+          className="mr-2.5 object-contain"
         />
         <span>Log in with Google</span>
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default SocialAuthForm
+export default SocialAuthForm;
