@@ -9,7 +9,6 @@ import { getTopTags } from "@/lib/actions/tag.action";
 
 import DataRenderer from "../DataRenderer";
 
-
 // const hotQuestions = [
 //   { _id: "1", title: "How to create a custom hook in React?" },
 //   { _id: "2", title: "How to use React Query with Next.js?" },
@@ -27,8 +26,13 @@ import DataRenderer from "../DataRenderer";
 // ];
 
 const RightSidebar = async () => {
-  const { success, data: hotQuestions, error } = await getHotQuestions();
-  const { success: tagSuccess, data: topTags, error: tagError } = await getTopTags();
+  // const { success, data: hotQuestions, error } = await getHotQuestions();
+  // const { success: tagSuccess, data: topTags, error: tagError } = await getTopTags();
+
+  const [
+    { success, data: hotQuestions, error },
+    { success: tagSuccess, data: topTags, error: tagError },
+  ] = await Promise.all([getHotQuestions(), getTopTags()]);
 
   return (
     <section className="custom-scrollbar background-light900_dark200 light-border sticky right-0 top-0 flex h-screen w-[350px] flex-col gap-6 overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden">
@@ -68,7 +72,7 @@ const RightSidebar = async () => {
       </div>
       <div className="mt-16">
         <h3 className="h3-bold text-dark200_light900">Popular Tags</h3>
-        <DataRenderer 
+        <DataRenderer
           data={topTags}
           empty={{
             title: "No Tags Found",
