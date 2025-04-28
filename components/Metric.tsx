@@ -30,8 +30,8 @@ const Metric = ({
   const metricContent = (
     <>
       <Image
-        src={imgUrl}
-        alt={alt}
+        src={imgUrl || "/icons/avatar.svg"}
+        alt={alt || "User Avatar"}
         width={16}
         height={16}
         className={`rounded-full object-contain ${imgStyles}`}
