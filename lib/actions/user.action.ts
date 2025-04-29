@@ -1,6 +1,6 @@
 "use server";
 
-import { FilterQuery } from "mongoose";
+import { FilterQuery, PipelineStage, Types } from "mongoose";
 
 import { Answer, Question, User } from "@/database";
 
@@ -70,15 +70,17 @@ export async function getUsers(
   }
 }
 
-export async function getUser(params: GetUserParams): Promise<ActionResponse<{
-  user: User;
-  totalQuestions: number;
-  totalAnswers: number;
-}>> {
+export async function getUser(params: GetUserParams): Promise<
+  ActionResponse<{
+    user: User;
+    totalQuestions: number;
+    totalAnswers: number;
+  }>
+> {
   const validationResult = await action({
     params,
     schema: GetUserSchema,
-  })
+  });
 
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -87,7 +89,7 @@ export async function getUser(params: GetUserParams): Promise<ActionResponse<{
   const { userId } = params;
 
   try {
-    const user = await User.findById(userId)
+    const user = await User.findById(userId);
 
     if (!user) throw new Error("User not found");
 
@@ -107,14 +109,16 @@ export async function getUser(params: GetUserParams): Promise<ActionResponse<{
   }
 }
 
-export async function getUserQuestions(params: GetUserQuestionsParams): Promise<ActionResponse<{
-  questions: Question[];
-  isNext: boolean;
-}>> {
+export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
+  ActionResponse<{
+    questions: Question[];
+    isNext: boolean;
+  }>
+> {
   const validationResult = await action({
     params,
     schema: GetUserSchema,
-  })
+  });
 
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -132,7 +136,7 @@ export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
       .populate("tags", "name")
       .populate("author", "name image")
       .skip(skip)
-      .limit(limit)
+      .limit(limit);
 
     const isNext = totalQuestions > skip * questions.length;
 
@@ -147,14 +151,16 @@ export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
     return handleError(error) as ErrorResponse;
   }
 }
-export async function getUserAnswers(params: GetUserAnswersParams): Promise<ActionResponse<{
-  answers: Answer[];
-  isNext: boolean;
-}>> {
+export async function getUserAnswers(params: GetUserAnswersParams): Promise<
+  ActionResponse<{
+    answers: Answer[];
+    isNext: boolean;
+  }>
+> {
   const validationResult = await action({
     params,
     schema: GetUserSchema,
-  })
+  });
 
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -171,7 +177,7 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<Acti
     const answers = await Answer.find({ author: userId })
       .populate("author", "_id name image")
       .skip(skip)
-      .limit(limit)
+      .limit(limit);
 
     const isNext = totalAnswers > skip * answers.length;
 
@@ -180,6 +186,54 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<Acti
       data: {
         answers: JSON.parse(JSON.stringify(answers)),
         isNext,
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getUserTopTags(params: GetUserTagsParams): Promise<
+  ActionResponse<{
+    tags: { _id: string; name: string; count: number }[];
+  }>
+> {
+  const validationResult = await action({
+    params,
+    schema: GetUserSchema,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { userId } = params;
+
+  try {
+    const pipeline: PipelineStage[] = [
+      { $match: { author: new Types.ObjectId(userId) } },
+      { $unwind: "$tags" },
+      { $group: { _id: "$tags", count: { $sum: 1 } } },
+      {
+        $lookup: {
+          from: "tags",
+          localField: "_id",
+          foreignField: "_id",
+          as: "tagInfo",
+        },
+      },
+      { $unwind: "$tagInfo" },
+      { $sort: { count: -1 } },
+      { $limit: 10 },
+      { $project: { _id: "$tagInfo._id", name: "$tagInfo.name", count: 1 } },
+    ];
+
+    const tags = await Question.aggregate(pipeline);
+
+    return {
+      success: true,
+      data: {
+        tags: JSON.parse(JSON.stringify(tags)),
       },
     };
   } catch (error) {
